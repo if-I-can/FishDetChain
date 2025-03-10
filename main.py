@@ -6,6 +6,7 @@ from PIL import Image
 import re
 from io import BytesIO
 import backoff
+from openai import OpenAI
 client = OpenAI()
 
 
