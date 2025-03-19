@@ -87,10 +87,18 @@ class Agent():
 
 
 if __name__ == '__main__':
-    agent = Agent(
+    agent1 = Agent(
         api_key='sk-3bd0772e581b407d8e7601e75e150396', 
         api_url='https://api.deepseek.com',
         system_prompt=prompt,
         model_name='deepseek-chat'
     )
-    print(agent.invoke('请帮我框出图像中所有的鱼，图像:/home/zsl/DetToolChain/dataset-example/01.jpg'))
+
+    # agent2 = Agent(
+    #     api_key='sk-f8c6a280daa5450e9a6029bfc3d93553', 
+    #     api_url='https://dashscope.aliyuncs.com/compatible-mode/v1',
+    #     system_prompt=prompt,
+    #     model_name='deepseek-r1'
+    # )
+
+    print(agent1.invoke('请帮我框出图像中的每一条鱼，确保每条鱼是一个检测框，并以json格式返回检测到的每条鱼的位置信息，图像:/home/zsl/FishDetChain/dataset-example/01.jpg'))

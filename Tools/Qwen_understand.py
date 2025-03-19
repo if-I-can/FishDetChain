@@ -3,21 +3,13 @@ from qwen_vl_utils import process_vision_info
 import torch
 
 
-model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-        "Qwen/Qwen2.5-VL-7B-Instruct",
-        torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
-        device_map="auto",
-    )
+
 
 class Interface:
     def __init__(self):
         self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-                     "Qwen/Qwen2.5-VL-7B-Instruct",
-                    torch_dtype=torch.bfloat16,
-                    attn_implementation="flash_attention_2",
-                    device_map="auto",
-                    )
+    "Qwen/Qwen2.5-VL-7B-Instruct", torch_dtype="auto", device_map="auto"
+)
 
     def message_process(self, input_image):
         # Default processor

@@ -208,7 +208,7 @@ def plot_bounding_boxes(im, bounding_boxes, input_width, input_height):
     ]
 
     # Parsing out the markdown fencing
-    print(bounding_boxes)
+ 
     bounding_boxes = parse_json(bounding_boxes)
 
     font = ImageFont.truetype("NotoSansCJK-Regular.ttc", size=14)
@@ -245,8 +245,8 @@ def plot_bounding_boxes(im, bounding_boxes, input_width, input_height):
             draw.text((abs_x1 + 8, abs_y1 + 6), bounding_box["label"], fill=color, font=font)
 
     # Ensure the directory exists and is writable
-    output_dir = '/home/zsl/DetToolChain/runs'
-    output_path = os.path.join(output_dir, 'ak.png')
+    output_dir = '/home/zsl/FishDetChain/runs'
+    output_path = os.path.join(output_dir, 'ak9.png')
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
@@ -257,27 +257,18 @@ def plot_bounding_boxes(im, bounding_boxes, input_width, input_height):
     # Save the image
     img.save(output_path)
     
-model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-        "Qwen/Qwen2.5-VL-7B-Instruct",
-        torch_dtype=torch.bfloat16,
-        attn_implementation="flash_attention_2",
-        device_map="auto",
-    )
+
 
 class Qwen_Detect:
     def __init__(self):
         self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-                     "Qwen/Qwen2.5-VL-7B-Instruct",
-                    torch_dtype=torch.bfloat16,
-                    attn_implementation="flash_attention_2",
-                    device_map="auto",
-                    )
+    "Qwen/Qwen2.5-VL-7B-Instruct", torch_dtype="auto", device_map="auto"
+)
         
 
     def message_process(self, boxes,input_image):
         # Default processor
         self.processor = AutoProcessor.from_pretrained("Qwen/Qwen2.5-VL-7B-Instruct")
-        print(boxes)
         messages = [
             {
                 "role": "user",
@@ -288,7 +279,7 @@ class Qwen_Detect:
                     },
                     {
                         "type": "text", 
-                        "text": f'这是所有鱼的位置信息{boxes},，请对位置信息进行调整，以提升检测精度，最后返回json格式的位置信息'},
+                        "text": f'这是YOLO小模型检测到的每一条鱼的位置信息{boxes},这些信息只供参考，如果他不准确，请用你的知识对其位置信息进行调整，或者自己重新检测，如果检测到的数量过少，你可以把已给的位置信息，作为一个目标样本，根据特征，尽可能标注更多的鱼，确保位置信息更加准确，最后返回json格式的位置信息'},
                 ],
             }
         ]
@@ -305,7 +296,7 @@ class Qwen_Detect:
     
     def result(self, input):
         input_dict = json.loads(input)
-        boxes = input_dict.get('detect_yolo_results')
+        boxes = input_dict.get('detections')
         input_image = input_dict.get('image_path')
         self.message_process(boxes,input_image)
         generated_ids = self.model.generate(**self.inputs, max_new_tokens=512)
