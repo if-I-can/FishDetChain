@@ -1,2 +1,1 @@
-
-![Uploading image.png…]()
+![Alt text](./example.png)
